@@ -13,6 +13,10 @@ class SongFinder(Base):
 	song_id = Column(String(200), nullable=False)
 	song_lyrics = Column(String(700), nullable=False)
 
+	def __init__(self, song_id, song_lyrics):
+		self.song_id = song_id
+		self.song_lyrics = song_lyrics
+
 # Create an engine that stores data in the local directory's
 # songs.db file.
 engine = create_engine('sqlite:///songs.db', echo=True)
