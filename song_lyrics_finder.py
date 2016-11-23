@@ -2,7 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.exc import MultipleResultsFound
-import urllib.request
+import urllib2
+import json
 
 from model import SongFinder, Base
 
@@ -37,7 +38,7 @@ def song_view(track_id):
 # To view a song you need to check it in the database before looking for it online
 	
 	try:
-		find_song = session.query(SongFinder).filter(song_id == track_id).one()
+		find_song = session.query(SongFinder).filter(SongFinder.song_id == track_id).one()
 		print 'Getting data from Database'
 		print find_song.song_id
 		print find_song.song_lyrics
@@ -46,31 +47,31 @@ def song_view(track_id):
 		print "Getting data from the API"
 		full_url = musix_match_url + "track.lyrics.get?track_id=" + track_id + "&apikey=" + api_key + "&json"
 		# can pass data and headers to te Request method.
-		request_stmt = urllib.request.Request(full_url)
+		request_stmt = urllib2.Request(full_url)
         	# can pass timeout time to the urlopen method
 		try:
-			data = urllib.request.urlopen(request_stmt)
+			data = urllib2.urlopen(request_stmt)
 			the_page = data.read()
 			lyrics = json.loads(the_page.decode("utf-8"))
 			get_len = len(lyrics["message"]["body"])
 			if get_len == 0:
-				print "lyrics not founff in musixmatch"
+				print "lyrics not found in musixmatch"
 			else:
 				print lyrics["message"]["body"]["lyrics"]["lyrics_body"]
-		except urllib.error.URLError as e:
+		except URLError as e:
 			print e.reason
 song_view('15953433')        	
 
-
-
-
-
-	
-
-# Store song details and lyrics locally..
-# def song_save():
-	# pass
-
 # Clear entire local song database.	
-# def song_clear():
-#	pass	
+ def song_clear(clear):
+ 	print "Are you sure you want to clear the database?"
+ 	input = input("Enter yes or no")
+ 	if clear == "yes":
+ 		try:
+ 			num_of_rows_deleted = db.session.query(SongFinder).delete()
+ 			db.session.commit()
+ 			print "Database cleared successfully."
+ 		except:
+ 			db.session.rollback()
+ 	else:
+ 		sys.exit()
