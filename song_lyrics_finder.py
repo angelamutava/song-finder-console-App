@@ -35,7 +35,7 @@ def song_find():
 # if theres a local copy before checking online
 def song_view(track_id):
 
-# To view a song you need to check it in the database before looking for it online
+# To view a song you need to check if it is in the database before looking for it online.
 	
 	try:
 		find_song = session.query(SongFinder).filter(SongFinder.song_id == track_id).one()
@@ -75,3 +75,25 @@ song_view('15953433')
  			db.session.rollback()
  	else:
  		sys.exit()
+
+def song_save(song_id):
+	# This method saves the song to the database
+	full_url = musix_match_url + "track.lyrics.get?track_id=" + track_id + "&apikey=" + api_key + "&json"
+    # can pass data and headers to te Request method.
+	request_stmt = urllib2.Request(full_url)
+    # can pass timeout time to the urlopen method
+	try:
+		data = urllib2.urlopen(request_stmt)
+		the_page = data.read()
+		lyrics = json.loads(the_page.decode("utf-8"))
+		get_len = len(lyrics["message"]["body"])
+		if get_len == 0:
+			print "Song not found in musixmatch"
+		else:
+			song_found = SongFinder(song_id, lyrics)
+			session.add(song_found)
+			session.commit()
+	except URLError as e:
+		print e.reason
+
+
