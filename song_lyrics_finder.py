@@ -58,13 +58,13 @@ def song_view(track_id):
 				print "lyrics not found in musixmatch"
 			else:
 				print lyrics["message"]["body"]["lyrics"]["lyrics_body"]
-		except URLError as e:
+		except urllib2.URLError as e:
 			print e.reason
-song_view('15953433')        	
+song_view('15953433')
 
-# Clear entire local song database.	
- def song_clear(clear):
- 	print "Are you sure you want to clear the database?"
+# Clear entire local song database.
+def song_clear(clear):
+	print "Are you sure you want to clear the database?"
  	input = input("Enter yes or no")
  	if clear == "yes":
  		try:
@@ -76,7 +76,7 @@ song_view('15953433')
  	else:
  		sys.exit()
 
-def song_save(song_id):
+def song_save(track_id):
 	# This method saves the song to the database
 	full_url = musix_match_url + "track.lyrics.get?track_id=" + track_id + "&apikey=" + api_key + "&json"
     # can pass data and headers to te Request method.
@@ -90,10 +90,10 @@ def song_save(song_id):
 		if get_len == 0:
 			print "Song not found in musixmatch"
 		else:
-			song_found = SongFinder(song_id, lyrics)
+			song_found = SongFinder(track_id, lyrics)
 			session.add(song_found)
 			session.commit()
-	except URLError as e:
+	except urllib2.URLError as e:
 		print e.reason
 
-
+song_save('15953433')
