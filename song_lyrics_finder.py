@@ -23,13 +23,23 @@ DBSession = sessionmaker(bind=engine)
 # session.rollback()
 session = DBSession()
 
-# Declaring the static variables.
+# Declaring the static variables for configuration.
 api_key = "5120626c22645c776a9a863c9b0859c4"
 musix_match_url = "http://api.musixmatch.com/ws/1.1/"
 
 # Returns a list of songs that match the criteria.
-def song_find():
-	pass
+def song_find(query_string):
+	full_url = musix_match_url + "track.search?q_track=" + query_string + "&apikey=" + api_key + "&json"
+	try:
+	request_stmt = urllib2.Request(full_url)
+    # can pass timeout time to the urlopen method
+    data = urllib2.urlopen(request_stmt)
+    the_page = data.read()
+    lyrics = json.loads(the_page.decode("utf-8"))
+
+    except urllib2.URLError as e:
+    	print e.reason
+
 
 # View song lyrics based on its id. Should be optimized by checking 
 # if theres a local copy before checking online
@@ -47,9 +57,10 @@ def song_view(track_id):
 		print "Getting data from the API"
 		full_url = musix_match_url + "track.lyrics.get?track_id=" + track_id + "&apikey=" + api_key + "&json"
 		# can pass data and headers to te Request method.
-		request_stmt = urllib2.Request(full_url)
-        	# can pass timeout time to the urlopen method
+		
 		try:
+			request_stmt = urllib2.Request(full_url)
+        	# can pass timeout time to the urlopen method
 			data = urllib2.urlopen(request_stmt)
 			the_page = data.read()
 			lyrics = json.loads(the_page.decode("utf-8"))
@@ -68,7 +79,7 @@ def song_clear(clear):
  	input = input("Enter yes or no")
  	if clear == "yes":
  		try:
- 			num_of_rows_deleted = db.session.query(SongFinder).delete()
+ 			deleted_rows = db.session.query(SongFinder).delete()
  			db.session.commit()
  			print "Database cleared successfully."
  		except:
