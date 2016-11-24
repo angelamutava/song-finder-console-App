@@ -1,5 +1,5 @@
 """DJ WEKA NGOMA
- This applicat
+ This application finds lyrics to songs using musixmatch api.
 Usage:
 	song_find <query>
 	song_view <track_id>
@@ -10,6 +10,8 @@ Usage:
 import cmd
 from docopt import docopt, DocoptExit
 from song_lyrics_finder import *
+from pyfiglet import figlet_format
+from termcolor import cprint
 
 def docopt_cmd(func):
 	"""
@@ -33,53 +35,52 @@ def docopt_cmd(func):
 	fn.__name__ = func.__name__
 	fn.__doc__ = func.__doc__
 	fn.__dict__.update(func.__dict__)
-
-return fn
+	return fn
 
 class LyricsFinder(cmd.Cmd):
-	intro = ""
-	prompt = "Weka ngoma *****"
-    
-    @docopt_cmd
+	intro = cprint(figlet_format("DJ WEKA NGOMA", font="big"), "cyan")
+	prompt = "<--Weka ngoma -->"
+
+	@docopt_cmd
 	def do_song_find(self, arg):
 		""" Find a song using any given query
-		Usage : song_find<query>
-		"""
+	        Usage : song_find<query>
+	    """
 		query = arg["<query>"]
 		song_find(query)
 
-    @docopt_cmd
+	@docopt_cmd
 	def do_song_view(self, arg):
 		"""Views a song using track track_id
-		   Usage : song_view<track_id>
-		"""	
+	       Usage : song_view<track_id>
+	    """	
 		track_id = arg["<track_id>"]
+		if track_id.isalpha():
+			print "Track id should contain numbers only"
 		song_view(track_id)
 
 	@docopt_cmd
 	def do_song_clear(self, arg):
-		"""Clear all the songs from the database
-		   Usage:no argument provided
-		"""
 		print "Are you sure you want to clear the entire database"
 		song_clear()
 
 	@docopt_cmd
 	def	do_song_save(self, arg):
 		"""
-		Save a song to the database
-		Usage:song_save<track_id>
-
-		"""
+	    Save a song to the database
+	    Usage:song_save<track_id>
+        """
 		track_id = arg["<track_id>"]
+		if track_id.isalpha():
+			print "track id should contain numbers only"
 		song_save(track_id)
 
-    @docopt_cmd
-    def quit(self, arg):
-    	"""
-        Exits the app
-        Usage: quit
-    	"""
-    	exit()
+	@docopt_cmd
+	def quit(self, arg):
+		"""
+	    Exits the app
+	    Usage: quit
+	    """
+		exit()
 if __name__ == '__main__':
-	LyricsFinder.cmdloop()
+	LyricsFinder().cmdloop()
