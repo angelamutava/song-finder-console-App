@@ -31,14 +31,31 @@ musix_match_url = "http://api.musixmatch.com/ws/1.1/"
 def song_find(query_string):
 	full_url = musix_match_url + "track.search?q_track=" + query_string + "&apikey=" + api_key + "&json"
 	try:
-	request_stmt = urllib2.Request(full_url)
-    # can pass timeout time to the urlopen method
-    data = urllib2.urlopen(request_stmt)
-    the_page = data.read()
-    lyrics = json.loads(the_page.decode("utf-8"))
-
-    except urllib2.URLError as e:
-    	print e.reason
+		request_stmt = urllib2.Request(full_url)
+        # can pass timeout time to the urlopen method
+		data = urllib2.urlopen(request_stmt)
+		the_page = data.read()
+		lyrics = json.loads(the_page.decode("utf-8"))
+		# To get the tracks with the given query string from the json string
+		list_tracks = lyrics["message"]["body"]["track_list"]
+		get_len = len(list_tracks)
+		list_of_all_tracks = []
+		count = 0
+		while count <= get_len - 1:
+			list_specific_track = []
+			# get the track_details
+			get_track_id = list_tracks[count][track][track_id]
+			get_song_name = list_tracks[count][track][track_name]
+			get_song_album_name = list_tracks[count][track][album_name]
+			get_song_artist_name = list_tracks[count][track][artist_name]
+			count += 1
+			list_specific_song.insert(0, get_track_id)
+			list_specific_song.insert(1, get_song_name)
+			list_specific_song.insert(2, get_song_album_name)
+			list_specific_song.insert(3, get_song_artist_name)
+			list_of_all_tracks.append(list_specific_song)
+	except urllib2.URLError as e:
+		print e.reason
 
 
 # View song lyrics based on its id. Should be optimized by checking 
@@ -74,10 +91,10 @@ def song_view(track_id):
 song_view('15953433')
 
 # Clear entire local song database.
-def song_clear(clear):
+def song_clear(input_value):
 	print "Are you sure you want to clear the database?"
- 	input = input("Enter yes or no")
- 	if clear == "yes":
+ 	user_input = input("Enter yes or no")
+ 	if input_value == "yes":
  		try:
  			deleted_rows = db.session.query(SongFinder).delete()
  			db.session.commit()
