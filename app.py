@@ -6,7 +6,7 @@ Usage:
 	song_clear
 	song_clear_single_song<track_id>
 	song_save<track_id>
-	quit
+	
 """
 import cmd
 from docopt import docopt, DocoptExit
@@ -61,7 +61,7 @@ class LyricsFinder(cmd.Cmd):
 	def do_song_clear(self, arg):
 		"""Usage: song_clear
 		"""
-		print "Are you sure you want to clear the entire database"
+		print "Are you sure you want to clear the entire database?"
 		song_clear()
 
 	@docopt_cmd
@@ -73,6 +73,12 @@ class LyricsFinder(cmd.Cmd):
 		song_save(track_id)
 
 	@docopt_cmd
+	def do_song_clear_single_song(self, arg):
+		"""Usage: song_clear_single_song <track_id>"""
+		track_id = arg["<track_id>"]
+		song_clear_single_song(track_id)
+
+	
 	def quit(self, arg):
 		"""
 	    Exits the app
