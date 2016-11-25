@@ -9,6 +9,7 @@ import json
 import textwrap
 
 from model import SongFinder, Base
+from tqdm import tqdm
 
 engine = create_engine('sqlite:///songs.db')
 
@@ -39,59 +40,59 @@ def song_find(query_string):
 		data.close()
 		list_tracks = lyrics['message']['body']['track_list']
 		list_of_all_songs = []
-		song_number = 0
+		# should check count not to be below length of the list
+		print len(list_tracks)
+		track_table = PrettyTable(['Track Id', 'Track Name', 'Artist Name'])
 		for tracks in list_tracks:
 			song_details = []
 			get_track_id = tracks['track']['track_id']
 			get_song_name = tracks['track']['track_name']
-			get_song_album_name = tracks['track']['album_name']
+			#get_song_album_name = tracks['track']['album_name']
 			get_song_artist_name = tracks['track']['artist_name']
 			song_details.insert(0, get_track_id)
 			song_details.insert(1, get_song_name)
-			song_details.insert(2, get_song_album_name)
-			song_details.insert(3, get_song_artist_name)
+			#song_details.insert(2, get_song_album_name)
+			song_details.insert(2, get_song_artist_name)
 			list_of_all_songs.append(song_details)
-			track_table = PrettyTable(['Track Id', 'Track Name', 'Album Name', 'Artist Name'])
-			track_table.add_row([get_track_id, get_song_name, get_song_album_name, get_song_artist_name])
-			song_number += 1	
+			track_table.add_row([get_track_id, get_song_name, get_song_artist_name])
 		print track_table
-		
+
 	except urllib2.URLError as e:
 		print e.reason
 
-song_find('back to december')		
+		
 
 def song_view(track_id):
 	"""This function returns the song lyrics"""
 	try:
-		find_song = session.query(SongFinder).filter(SongFinder.song_id == track_id).one()
-		print 'Getting lyrics from Database'
-		print find_song.song_lyrics
-		
-	except MultipleResultsFound:
-		find_song = session.query(SongFinder).filter(SongFinder.song_id == track_id).all()
-		for item in find_song:
-			print item.song_lyrics
-	except NoResultFound:
-		print "Getting lyrics from the API"
-		full_url = musix_match_url + "track.lyrics.get?track_id=" + track_id + "&apikey=" + api_key + "&json"
-
+		int(track_id)
 		try:
-			request_stmt = urllib2.Request(full_url)
-			data = urllib2.urlopen(request_stmt)
-			the_page = data.read()
-			lyrics = json.loads(the_page.decode("utf-8"))
-			data.close()
-			print lyrics["message"]["body"]["lyrics"]["lyrics_body"]
-		except urllib2.URLError as e:
-			print e.reason
-song_view('15953433')
+			find_song = session.query(SongFinder).filter(SongFinder.song_id == track_id).one()
+			print 'Getting lyrics from Database'
+			print find_song.song_lyrics
+		except MultipleResultsFound:
+			find_song = session.query(SongFinder).filter(SongFinder.song_id == track_id).all()
+			for item in find_song:
+				print item.song_lyrics
+		except NoResultFound:
+			print "Getting lyrics from the API"
+			full_url = musix_match_url + "track.lyrics.get?track_id=" + track_id + "&apikey=" + api_key + "&json"
+			try:
+				request_stmt = urllib2.Request(full_url)
+				data = urllib2.urlopen(request_stmt)
+				the_page = data.read()
+				lyrics = json.loads(the_page.decode("utf-8"))
+				data.close()
+				print lyrics["message"]["body"]["lyrics"]["lyrics_body"]
+			except urllib2.URLError as e:
+				print e.reason
+
+	except ValueError:
+		print 'Track id should be a number, please try again'
 
 
 def song_clear():
-	"""
-     This function clears the entire database
-	"""
+	"""This function clears the entire database."""
 	try:
 		deleted_rows = session.query(SongFinder).delete()
 		session.commit()
@@ -99,7 +100,7 @@ def song_clear():
  	except:
  		session.rollback()
  	
-song_clear() 
+
 
 def song_clear_single_song(track_id):
 	"""This function clears a single song from the database."""	
@@ -112,19 +113,23 @@ def song_clear_single_song(track_id):
 
 def song_save(track_id):
 	"""This function saves the song to the database."""
-	full_url = musix_match_url + "track.lyrics.get?track_id=" + track_id + "&apikey=" + api_key + "&json"
-	request_stmt = urllib2.Request(full_url)
 	try:
-		data = urllib2.urlopen(request_stmt)
-		the_page = data.read()
-		lyrics = json.loads(the_page.decode("utf-8"))
-		data.close()
-		lyrics_content = lyrics["message"]["body"]["lyrics"]["lyrics_body"]
-		song_found = SongFinder(track_id, lyrics_content)
-		session.add(song_found)
-		session.commit()
-	except urllib2.URLError as e:
-		print e.reason
+		int(track_id)
+		full_url = musix_match_url + "track.lyrics.get?track_id=" + track_id + "&apikey=" + api_key + "&json"
+		request_stmt = urllib2.Request(full_url)
+		try:
+			data = urllib2.urlopen(request_stmt)
+			the_page = data.read()
+			lyrics = json.loads(the_page.decode("utf-8"))
+			data.close()
+			lyrics_content = lyrics["message"]["body"]["lyrics"]["lyrics_body"]
+			song_found = SongFinder(track_id, lyrics_content)
+			session.add(song_found)
+			session.commit()
+		except urllib2.URLError as e:
+			print e.reason
+	except ValueError:
+		print 'Trackid should be a number, please try again'
 
-song_save('15953433')
+
 
