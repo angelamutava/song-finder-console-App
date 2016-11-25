@@ -1,11 +1,12 @@
 """DJ WEKA NGOMA
  This application finds lyrics to songs using musixmatch api.
 Usage:
-	song_find <query>
+	songfind <query>
 	song_view <track_id>
-	song_clear<>
+	song_clear
 	song_clear_single_song<track_id>
 	song_save<track_id>
+	quit
 """
 import cmd
 from docopt import docopt, DocoptExit
@@ -21,7 +22,7 @@ def docopt_cmd(func):
 		try:
 			opt = docopt(fn.__doc__, arg)
 		except DocoptExit as e:
-			msg = "Invalid command! See help."
+			msg = "Invalid Command."
 
 			print(msg)
 			print(e)
@@ -42,18 +43,15 @@ class LyricsFinder(cmd.Cmd):
 	prompt = "<--Weka ngoma -->"
 
 	@docopt_cmd
-	def do_song_find(self, arg):
-		""" Find a song using any given query
-	        Usage : song_find<query>
-	    """
+	def do_songfind(self, arg):
+		"""Usage: songfind <query> """
 		query = arg["<query>"]
 		song_find(query)
+		
 
 	@docopt_cmd
 	def do_song_view(self, arg):
-		"""Views a song using track track_id
-	       Usage : song_view<track_id>
-	    """	
+		"""Usage: song_view <track_id>"""	
 		track_id = arg["<track_id>"]
 		if track_id.isalpha():
 			print "Track id should contain numbers only"
@@ -61,15 +59,14 @@ class LyricsFinder(cmd.Cmd):
 
 	@docopt_cmd
 	def do_song_clear(self, arg):
+		"""Usage: song_clear
+		"""
 		print "Are you sure you want to clear the entire database"
 		song_clear()
 
 	@docopt_cmd
 	def	do_song_save(self, arg):
-		"""
-	    Save a song to the database
-	    Usage:song_save<track_id>
-        """
+		"""Usage: song_save <track_id>"""
 		track_id = arg["<track_id>"]
 		if track_id.isalpha():
 			print "track id should contain numbers only"
