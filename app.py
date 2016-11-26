@@ -41,12 +41,14 @@ def docopt_cmd(func):
 
 class LyricsFinder(cmd.Cmd):
 	intro = cprint(figlet_format("DJ   WEKA   NGOMA", font="big"), "yellow", attrs=['bold'])
-	print "\t\tCommand\t\tDescription\t\tParameter"
-	print "\t\tfind\t\tfinds  song \t\tforever."
-	print "\t\tview\t\tGets lyrics \t\t15445219."
-	print "\t\tclear\t\tClears db\t\tNo parameter."
-	print "\t\tclear_song\t\tClears song \t\t15445219."
-	print "\t\tsave\t\tSaves song\t\t15445219"
+	print "**********User Guide************"
+	print "    Command    Description     Parameter"
+	print "    find       finds  song     forever"
+	print "    view       Gets lyrics     15445219"
+	print "    clear      Clears db       No parameter"
+	print "    clear_song Clears song     15445219"
+	print "    save       Saves song      15445219"
+	print "type --help-- to view commands"
 	prompt = "<--Weka ngoma -->"
 
 	@docopt_cmd
@@ -68,7 +70,6 @@ class LyricsFinder(cmd.Cmd):
 	def do_clear(self, arg):
 		"""Usage: clear
 		"""
-		print "Are you sure you want to clear the entire database?"
 		song_clear()
 
 	@docopt_cmd

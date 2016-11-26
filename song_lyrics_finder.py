@@ -7,7 +7,7 @@ import urllib2
 import urllib
 import json
 import textwrap
-
+import click
 from model import SongFinder, Base
 from tqdm import tqdm
 
@@ -31,7 +31,7 @@ def song_find(query_string):
 	"""
 	This is a function that returns list of songs based on the query passed
 	"""
-	full_url = musix_match_url + "track.search?q_track=" + urllib.quote(query_string) + "&apikey=" + api_key + "&json"
+	full_url = musix_match_url + "track.search?q_track=" + query_string + "&apikey=" + api_key + "&json"
 	try:
 		request_stmt = urllib2.Request(full_url)
 		data = urllib2.urlopen(request_stmt)
@@ -40,25 +40,21 @@ def song_find(query_string):
 		data.close()
 		list_tracks = lyrics['message']['body']['track_list']
 		list_of_all_songs = []
-		# should check count not to be below length of the list
-		print len(list_tracks)
 		track_table = PrettyTable(['Track Id', 'Track Name', 'Artist Name'])
 		for tracks in list_tracks:
 			song_details = []
 			get_track_id = tracks['track']['track_id']
 			get_song_name = tracks['track']['track_name']
-			#get_song_album_name = tracks['track']['album_name']
 			get_song_artist_name = tracks['track']['artist_name']
 			song_details.insert(0, get_track_id)
 			song_details.insert(1, get_song_name)
-			#song_details.insert(2, get_song_album_name)
 			song_details.insert(2, get_song_artist_name)
 			list_of_all_songs.append(song_details)
 			track_table.add_row([get_track_id, get_song_name, get_song_artist_name])
 		print track_table
 
 	except urllib2.URLError as e:
-		print e.reason
+		print 'No internet connection, connect and try again.'
 
 		
 
@@ -69,13 +65,12 @@ def song_view(track_id):
 		try:
 			find_song = session.query(SongFinder).filter(SongFinder.song_id == track_id).one()
 			print 'Getting lyrics from Database'
-			print find_song.song_lyrics
+			print click.style(find_song.song_lyrics, fg='blue')
 		except MultipleResultsFound:
 			find_song = session.query(SongFinder).filter(SongFinder.song_id == track_id).all()
 			for item in find_song:
-				print item.song_lyrics
+				print click.style(item.song_lyrics, fg='blue')
 		except NoResultFound:
-			print "Getting lyrics from the API"
 			full_url = musix_match_url + "track.lyrics.get?track_id=" + track_id + "&apikey=" + api_key + "&json"
 			try:
 				request_stmt = urllib2.Request(full_url)
@@ -83,9 +78,9 @@ def song_view(track_id):
 				the_page = data.read()
 				lyrics = json.loads(the_page.decode("utf-8"))
 				data.close()
-				print lyrics["message"]["body"]["lyrics"]["lyrics_body"]
+				print click.style(lyrics["message"]["body"]["lyrics"]["lyrics_body"], fg="blue")
 			except urllib2.URLError as e:
-				print e.reason
+				print 'No internet connection, connect and try again'
 
 	except ValueError:
 		print 'Track id should be a number, please try again'
@@ -109,7 +104,7 @@ def song_clear_single_song(track_id):
 		session.commit()
 		print "Song deleted successfully"
 	except:
-		session.rollback()	
+		session.rollback()
 
 def song_save(track_id):
 	"""This function saves the song to the database."""
@@ -126,10 +121,10 @@ def song_save(track_id):
 			song_found = SongFinder(track_id, lyrics_content)
 			session.add(song_found)
 			session.commit()
+			print "Song saved successfully."
 		except urllib2.URLError as e:
-			print e.reason
+			print 'No internet connection, connect and try again.'
 	except ValueError:
-		print 'Trackid should be a number, please try again'
-
+		print 'Track id should be a number, please try again.'
 
 
