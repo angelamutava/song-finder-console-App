@@ -40,7 +40,9 @@ def docopt_cmd(func):
 	return fn
 
 class LyricsFinder(cmd.Cmd):
+	print"================================================================================"
 	intro = cprint(figlet_format("DJ   WEKA   NGOMA", font="big"), "yellow", attrs=['bold'])
+	print"================================================================================"
 	print "**********User Guide************"
 	print "    Command    Description     Parameter"
 	print "    find       finds  song     forever"
