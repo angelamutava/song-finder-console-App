@@ -41,7 +41,8 @@ This command gets the album of songs based on the album_id passed to it.<br/>
 ######album 14250417
 
 ##User Interface 
-On running python app.py the interface looks like this.
+On running python app.py the interface looks like this.<br/>
+![alt](https://github.com/anonymousme/bc-12-song-lyrics-finder/blob/master/Capture.PNG "home")
 
 
 ##Suggestions on Improvements.
