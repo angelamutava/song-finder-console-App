@@ -45,6 +45,6 @@ On running python app.py the interface looks like this.
 
 
 ##Suggestions on Improvements.
-Implement the song_lyrics_finder as a class.
-Implement tests for the methods.
+1.Implement the song_lyrics_finder as a class.
+2.Implement tests for the methods.
 CIAO!Angie Mutava---Aspiring Developer.
