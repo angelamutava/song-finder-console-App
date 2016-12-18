@@ -6,6 +6,8 @@ Usage:
 	clear
 	clear_song<track_id>
 	save<track_id>
+	album<album_id>
+	artist<artist_name>
 	
 """
 import cmd
@@ -50,6 +52,8 @@ class LyricsFinder(cmd.Cmd):
 	print "    clear      Clears db       No parameter"
 	print "    clear_song Clears song     15445219"
 	print "    save       Saves song      15445219"
+	print "    album      Gets album      14250417"
+	print"     artist     Gets artist     Justin"
 	print "type --help-- to view commands"
 	prompt = "<--Weka ngoma -->"
 
@@ -87,6 +91,18 @@ class LyricsFinder(cmd.Cmd):
 		"""Usage: clear_song <track_id>"""
 		track_id = arg["<track_id>"]
 		song_clear_single_song(track_id)
+
+	@docopt_cmd
+	def do_album(self, arg):
+		"""Usage: album <album_id>"""	
+		album_id = arg["<album_id>"]
+		song_album(album_id)
+
+	@docopt_cmd
+	def do_artist(self, arg):
+		"""Usage: artist<artist_name>"""
+		artist_name = arg["<artist_name>"]
+		search_artist(artist_name)	
 
 	
 	def do_quit(self, arg):
