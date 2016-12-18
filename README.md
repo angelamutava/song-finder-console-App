@@ -1,18 +1,54 @@
-# bc-12-song-lyrics-finder
+#Song lyrics finder
+##(DJ WEKA NGOMA)
 
-(DJ WEKA NGOMA)
--------------------------------------------------------------
-Song lyrics finder (DJ WEKA NGOMA) is  a python console application that gets lyrics online using the musixmatch API. The user can find a song using a query of their choice. This command gives the details of the song which includes the song id. Using the song id one can view the song lyrics and save them in the database respectively. To clear a single song from the database an id to the song is provided and to clear the entire database the clear command is used. 
--------------------------------------------------------------------
-###Installation
-Clone the repository :https://github.com/anonymousme/bc-12-song-lyrics-finder
-To run the appliacation run python app.py inside the folder bc-12-song-lyrics-finder.
+Song lyrics finder is a console application built using python. It levarages on the musixmatch API to get lyrics online.The user can find a song using a query of their choice. Being a fan of casting crown you can try out courageous.
 
-##Usage
-Create a virtual environment in the directory bc-12-song-lyrics-finder.Pip install the items inside requirements.txt.
+####Installation.
+Clone the repository.
+```
+https://github.com/anonymousme/bc-12-song-lyrics-finder 
+```
+In your virtual environment.
+```
+pip install -r requirements.txt
+```
+The above command will install the required libraries in order to get your environment up and running. Run app.py in the directory bc-12-song-lyrics-finder.
 
-##Interface Interaction
-After running app.py.The interface looks like this.
+####Commands.
+1.find
+This command provided with a query finds all the top 10 hits with the given query. The API method that gets the song returns the top 10 hits with the given query.
+```find courageous
+```
+2.save 
+This command saves a song to the database.Provided with the parameter song_id it gets the song lyrics online and saves them to the database.
+```
+save 15445219
+```
+3.clear
+This command clears the entire database.
+```
+clear
+```
+4.clear_song
+This command clears a song from the database using the song_id.
+```
+clear_song 15445219
+```
+5.artist
+This command gets the artist using artist name.It returns the artists with the given name based on the number passed in the url.
+```
+artist kari jobes
+```
+6.album
+This command gets the album of songs based on the album_id passed to it.
+```
+album 14250417
+```
+##User Interface
+On running python app.py the interface looks like this.
+![alt](https://github.com/anonymousme/bc-12-song-lyrics-finder/blob/master/Capture.PNG "home")
 
-##Pending issues
-The save song functionality does not work appropriately it adds song with the same id.
+##Suggestions on Improvements.
+Implement the song_lyrics_finder as a class.
+Implement tests for the methods.
+CIAO!Angie Mutava---Aspiring Developer.
