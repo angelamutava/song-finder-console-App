@@ -16,27 +16,28 @@ The above command will install the required libraries in order to get your envir
 
 ####Commands.
 1.find<br/>
-This command provided with a query finds all the top 10 hits with the given query. The API method that gets the song returns the top 10 hits with the given query.
+This command provided with a query finds all the top 10 hits with the given query. The API method that gets the song returns the top 10 hits with the given query.<br/>
 ```find courageous```
 
 2.save <br/>
-This command saves a song to the database.Provided with the parameter song_id it gets the song lyrics online and saves them to the database.
+This command saves a song to the database.Provided with the parameter song_id it gets the song lyrics online and saves them to the database.<br/>
 ```save 15445219```
 
 3.clear<br/>
-This command clears the entire database.
+This command clears the entire database.<br/>
 ```clear```
 
 4.clear_song<br/>
-This command clears a song from the database using the song_id.
+This command clears a song from the database using the song_id.<br/>
 ```clear_song 15445219```
 
 5.artist<br/>
 This command gets the artist using artist name.It returns the artists with the given name based on the number passed in the url.
+<br/>
 ```artist kari jobes```
 
-6.album<br>
-This command gets the album of songs based on the album_id passed to it.
+6.album<br/>
+This command gets the album of songs based on the album_id passed to it.<br/>
 ```album 14250417```
 
 ##User Interface 
