@@ -33,26 +33,25 @@ def song_find(query_string):
 	"""
 	full_url = musix_match_url + "track.search?q_track=" + query_string + "&apikey=" + api_key + "&json"
 	try:
-		for i in tqdm(range(1000)):
-			request_stmt = urllib2.Request(full_url)
-			data = urllib2.urlopen(request_stmt)
-			the_page = data.read()
-			lyrics = json.loads(the_page.decode("utf-8"))
-			data.close()
-			list_tracks = lyrics['message']['body']['track_list']
-			list_of_all_songs = []
-			track_table = PrettyTable(['Track Id', 'Track Name', 'Artist Name'])
-			for tracks in list_tracks:
-				song_details = []
-				get_track_id = tracks['track']['track_id']
-				get_song_name = tracks['track']['track_name']
-				get_song_artist_name = tracks['track']['artist_name']
-				song_details.insert(0, get_track_id)
-				song_details.insert(1, get_song_name)
-				song_details.insert(2, get_song_artist_name)
-				list_of_all_songs.append(song_details)
-				track_table.add_row([get_track_id, get_song_name, get_song_artist_name])
-			print track_table
+		request_stmt = urllib2.Request(full_url)
+		data = urllib2.urlopen(request_stmt)
+		the_page = data.read()
+		lyrics = json.loads(the_page.decode("utf-8"))
+		data.close()
+		list_tracks = lyrics['message']['body']['track_list']
+		list_of_all_songs = []
+		track_table = PrettyTable(['Track Id', 'Track Name', 'Artist Name'])
+		for tracks in list_tracks:
+			song_details = []
+			get_track_id = tracks['track']['track_id']
+			get_song_name = tracks['track']['track_name']
+			get_song_artist_name = tracks['track']['artist_name']
+			song_details.insert(0, get_track_id)
+			song_details.insert(1, get_song_name)
+			song_details.insert(2, get_song_artist_name)
+			list_of_all_songs.append(song_details)
+			track_table.add_row([get_track_id, get_song_name, get_song_artist_name])
+		print track_table
 
 	except urllib2.URLError as e:
 		print 'No internet connection, connect and try again.'
@@ -150,30 +149,27 @@ def song_album(album_id):
 	except ValueError:
 		print 'Track id should be a number, please try again.'
 
-def search_artist(artist_name):
-	"""
-	This is a function that returns list of songs based on the query passed
-	"""
-	full_url = musix_match_url + "artist.search?q_artist=" + query_name + "&apikey=" + api_key + "&json"
-	try:
-		request_stmt = urllib2.Request(full_url)
-		data = urllib2.urlopen(request_stmt)
-		the_page = data.read()
-		artists = json.loads(the_page.decode("utf-8"))
-		data.close()
-		list_artists = lyrics['message']['body']['artist_list']
-		list_of_all_artists = []
-		track_table = PrettyTable(['Artist Id', 'Artist Name', 'Artist Country'])
-		for artists in list_artists:
-			artist_details = []
-			get_artist_id = artists['artist']['artist_id']
-			get_artist_name = artists['artist']['artist_name']
-			get_artist_country = artists['artist']['artist_country']
-			song_details.insert(0, get_artist_id)
-			song_details.insert(1, get_artist_name)
-			song_details.insert(2, get_artist_country)
-			list_of_all_songs.append(song_details)
-			track_table.add_row([get_artist_id, get_artist_name, get_artist_country])
-		print track_table
-	except urllib2.URLError as e:
-		print 'No internet connection, connect and try again.'
+	def search_artist(artist_name):
+		full_url = musix_match_url + "artist.search?q_artist=" + query_name + "&apikey=" + api_key + "&json"
+		try:
+			request_stmt = urllib2.Request(full_url)
+		 	data = urllib2.urlopen(request_stmt)
+			the_page = data.read()
+			artists = json.loads(the_page.decode("utf-8"))
+			data.close()
+			list_artists = lyrics['message']['body']['artist_list']
+			list_of_all_artists = []
+			track_table = PrettyTable(['Artist Id', 'Artist Name', 'Artist Country'])
+			for artists in list_artists:
+				artist_details = []
+				get_artist_id = artists['artist']['artist_id']
+				get_artist_name = artists['artist']['artist_name']
+				get_artist_country = artists['artist']['artist_country']
+				song_details.insert(0, get_artist_id)
+				song_details.insert(1, get_artist_name)
+				song_details.insert(2, get_artist_country)
+				list_of_all_songs.append(song_details)
+				track_table.add_row([get_artist_id, get_artist_name, get_artist_country])
+			print track_table
+		except urllib2.URLError as e:
+			print 'No internet connection, connect and try again.'
